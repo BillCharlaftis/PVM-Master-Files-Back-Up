@@ -1,0 +1,50 @@
+form{
+    left:15vw;
+    position: absolute;
+}
+
+.fileChooser{
+    position: absolute;
+    width: 70vw;
+}
+
+.custom-switch{
+    position: absolute;
+    top: 30vh;
+    width: 70vw;
+}
+
+h4{
+    color: cadetblue;
+    border-color: #fff;
+}
+
+hr{
+    position: absolute;
+    width: 70vw;
+    top: 37vh;
+    background-color: cadetblue;
+}
+
+#BackUpFileSection{
+    top: 45vh;
+    position: absolute;
+}
+
+
+#ControlsSection{
+    top: 85vh;
+    position: absolute;
+}
+
+.custom-control-input:checked~.custom-control-label::before {
+    color: #fff;
+    border-color: cadetblue;
+    background-color: cadetblue;
+}
+
+#execute{
+    width: 70vw;
+    border-color: cadetblue;
+    color: cadetblue;
+}

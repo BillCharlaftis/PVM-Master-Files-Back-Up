@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>PVM Master Files Back UP!</title>
+  <link rel="stylesheet" href="../Dependencies/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../Style/index.css">
+  <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+  <script src="../Dependencies/jquery/3.4.1/jquery-3.4.1.slim.min.js"></script>
+  <script src="../Dependencies/popper/1.16.0/popper.min.js"></script>
+  <script type="text/javascript" src="../Dependencies/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script>if (window.module) module = window.module;</script>
+</head>
+
+<body>
+  <form>
+    <div id="formBody">
+      <div id="MasterFileSection">
+        <h4>Please select the folder of the master files.</h4>
+        <div class="fileChooser">
+          <input type="file" class="custom-file-input" id="customFile">
+          <label class="custom-file-label" for="customFile">Sorce Folder</label>
+        </div>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" checked  class="custom-control-input" id="exportMasterCSV">
+          <label class="custom-control-label" for="exportMasterCSV">Do you want to keep the csv of master folder on Desktop?</label>
+        </div>
+      </div>
+      <hr>
+      <div id="BackUpFileSection">
+        <h4>Please select the folder to transfer files.</h4>
+        <div class="fileChooser">
+          <input type="file" class="custom-file-input" id="customFile">
+          <label class="custom-file-label" for="customFile">Back Up Folder</label>
+        </div>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" checked class="custom-control-input" id="exportBackUpCSV">
+          <label class="custom-control-label" for="exportBackUpCSV">Do you want to keep the a copy of Master csv of on transfer folder?</label>
+        </div>
+      </div>
+      <div id="ControlsSection">
+       <button  id="execute" type="button" class="btn btn-primary">
+        Back Up!
+        </button> 
+      </div>
+    </div>
+  </form>
+  <script>
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function () {
+      var fileName = $(this).val().split("\\").pop();
+      $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+  </script>
+</body>
+</html>
