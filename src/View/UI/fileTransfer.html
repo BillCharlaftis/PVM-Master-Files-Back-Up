@@ -22,7 +22,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <div id="labels">
+                            <div id="header-labels">
                                 <h5>
                                     Copying <b id="NumOfFiles">123456789</b> items from <u><b id="srcFolder">Sorce
                                             Directory that master files are resting</b></u> to <u><b
@@ -60,6 +60,11 @@
                                     <canvas id="chLine" class="chartjs-render-monitor"></canvas>
                                 </div>
                             </div>
+                            <div id="footer-labels">
+                                <span>Transfering file: <b id="transfering-file"> example.mp4</b></span>
+                                <span>Remaining time: <b id="estimated-time"> 1hr 23min 45sec</b></span>
+                                <span>Remaining items: <b id="items-Remaining"> 123456789 (12,34MB)</b></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -71,7 +76,7 @@
     var chartData = {
         labels: ["20%", "40%", "60%", "80%", "100%"],
         datasets: [{
-            data: [589, 445, 483, 503, 408],
+            data: [339, 445, 483, 503, 408],
             borderColor: "#5bc0de",
             backgroundColor: "#5f9ea0",
             pointRadius: 0,

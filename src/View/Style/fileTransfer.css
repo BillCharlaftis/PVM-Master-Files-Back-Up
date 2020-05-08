@@ -11,7 +11,12 @@
 }
 
 #chLine{
+    border-left: 1px solid #5daebc;
     border-right: 1px solid #5daebc;
+}
+
+#footer-labels{
+    padding-top: 5px;
 }
 
 h5{
@@ -22,6 +27,11 @@ h5{
 span{
     display: flex;
     align-items: center;
+}
+
+span>b{
+    padding-left: 3px;
+    padding-right: 3px;
 }
 
 .transferPercentage{
