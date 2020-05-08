@@ -1,0 +1,30 @@
+#progress-bar-style{
+    color: #32383e;
+    background-color: #5f9ea0;
+}
+
+#graphs {
+    padding: 3px;
+    border: 1px solid #1c1e22;
+    border-radius: 10px;
+    background-color: #485056;
+}
+
+#chLine{
+    border-right: 1px solid #5daebc;
+}
+
+h5{
+    color: cadetblue;
+    border-color: #fff;
+}
+
+span{
+    display: flex;
+    align-items: center;
+}
+
+.transferPercentage{
+    width: 40%;
+    transition: width 0.6s ease;
+}

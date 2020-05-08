@@ -19,7 +19,7 @@
       <div id="MasterFileSection">
         <h4>Please select the folder of the master files.</h4>
         <div class="fileChooser">
-          <input type="file" class="custom-file-input" id="customFile">
+          <input type="file" class="custom-file-input" id="customFile" webkitdirectory directory>
           <label class="custom-file-label" for="customFile">Sorce Folder</label>
         </div>
         <div class="custom-control custom-switch">
@@ -31,7 +31,7 @@
       <div id="BackUpFileSection">
         <h4>Please select the folder to transfer files.</h4>
         <div class="fileChooser">
-          <input type="file" class="custom-file-input" id="customFile">
+          <input type="file" class="custom-file-input" id="customFile" webkitdirectory directory>
           <label class="custom-file-label" for="customFile">Back Up Folder</label>
         </div>
         <div class="custom-control custom-switch">
@@ -50,6 +50,7 @@
     // Add the following code if you want the name of the file appear on select
     $(".custom-file-input").on("change", function () {
       var fileName = $(this).val().split("\\").pop();
+      alert($(this).val().split("\\"))
       $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     });
   </script>
