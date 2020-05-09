@@ -31,7 +31,7 @@
                                 </h5>
                                 <div class="row">
                                     <span class="ml-3 mr-2">
-                                        <b id="TransferPerc">40% </b>
+                                        <b id="TransferPerc">0% </b>
                                         complete.
                                     </span>
                                     <div class="ml-auto mr-3">
@@ -45,7 +45,7 @@
                                     <div id="progress-bar-style"
                                         class="progress-bar progress-bar-danger transferPercentage" role="progressbar"
                                         aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
-                                        <b id="currentSpeed">408mb/s</b>
+                                        <b id="currentSpeed">0mb/s</b>
                                     </div>
                                 </div>
                                 <div class="chartjs-size-monitor">
@@ -61,9 +61,9 @@
                                 </div>
                             </div>
                             <div id="footer-labels">
-                                <span>Transfering file: <b id="transfering-file"> example.mp4</b></span>
-                                <span>Remaining time: <b id="estimated-time"> 1hr 23min 45sec</b></span>
-                                <span>Remaining items: <b id="items-Remaining"> 123456789 (12,34MB)</b></span>
+                                <span>Transfering file: <b id="transfering-file"> null</b></span>
+                                <span>Remaining time: <b id="estimated-time"> 0hr 0min 0sec</b></span>
+                                <span>Remaining items: <b id="items-Remaining"> 0 (0MB)</b></span>
                             </div>
                         </div>
                     </div>
@@ -72,46 +72,5 @@
         </div>
     </div>
 </body>
-<script>
-    var chartData = {
-        labels: ["20%", "40%", "60%", "80%", "100%"],
-        datasets: [{
-            data: [339, 445, 483, 503, 408],
-            borderColor: "#5bc0de",
-            backgroundColor: "#5f9ea0",
-            pointRadius: 0,
-        }]
-    };
-
-    var chLine = document.getElementById("chLine");
-    var chart;
-    if (chLine) {
-        chart = new Chart(chLine, {
-            type: 'line',
-            data: chartData,
-            options: {
-                maintainAspectRatio: false,
-                scales: {
-                    xAxes: [{
-                        display: false //this will remove all the x-axis grid lines
-                    }],
-                    yAxes: [{
-                        display: false,
-                        ticks: {
-                            beginAtZero: true,
-                            display: false //this will remove only the label
-                        }
-                    }]
-                },
-                legend: {
-                    display: false
-                },
-                tooltips: {
-                    enabled: false
-                }
-            }
-        });
-    }
-</script>
-
+<script src="../UX/fileTransfer.js"></script>
 </html>

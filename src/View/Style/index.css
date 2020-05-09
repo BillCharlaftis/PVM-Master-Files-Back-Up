@@ -1,12 +1,8 @@
 html{
-    animation: fadein 2s;
+    animation: fadein 2s; /* Safari and Chrome */
 }
 
-html{
-    -webkit-animation: fadein 2s; /* Safari and Chrome */
-}
-
-@-webkit-keyframes fadein { /* Safari and Chrome */
+@keyframes fadein { /* Safari and Chrome */
     from {
         opacity:0;
     }
