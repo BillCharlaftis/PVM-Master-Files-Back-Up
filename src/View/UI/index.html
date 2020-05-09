@@ -24,8 +24,8 @@
                 <div id="MasterFileSection">
                   <h4>Please select the folder of the master files.</h4>
                   <div class="fileChooser">
-                    <input type="file" class="custom-file-input" id="customFile" webkitdirectory directory>
-                    <label class="custom-file-label" for="customFile">Sorce Folder</label>
+                    <input type="button" class="custom-file-input" id="srcDir">
+                    <label id="srcDir-Label" class="custom-file-label" for="srcDir">Sorce Folder</label>
                   </div>
                   <div class="custom-control custom-switch">
                     <input type="checkbox" checked class="custom-control-input" id="exportMasterCSV">
@@ -38,8 +38,8 @@
                 <div id="BackUpFileSection">
                   <h4>Please select the folder to transfer files.</h4>
                   <div class="fileChooser">
-                    <input type="file" class="custom-file-input" id="customFile" webkitdirectory directory>
-                    <label class="custom-file-label" for="customFile">Back Up Folder</label>
+                    <input type="button" class="custom-file-input" id="buDir">
+                    <label id="buDir-Label" class="custom-file-label" for="buDir">Back Up Folder</label>
                   </div>
                   <div class="custom-control custom-switch">
                     <input type="checkbox" checked class="custom-control-input" id="exportBackUpCSV">
@@ -49,9 +49,9 @@
                   </div>
                 </div>
                 <div id="ControlsSection">
-                  <a id="execute" type="button" class="btn btn-primary" href="fileTransfer.html">
+                  <button id="execute" type="button" class="btn btn-disabled">
                     Back Up!
-                  </a>
+                  </button>
                 </div>
               </div>
             </form>
@@ -59,14 +59,6 @@
         </div>
       </div>
     </div>
+    <script src="../UX/index.js"></script>
 </body>
-<script>
-  // Add the following code if you want the name of the file appear on select
-  $(".custom-file-input").on("change", function () {
-    var fileName = $(this).val().split("\\").pop();
-    alert($(this).val().split("\\"))
-    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-  });
-</script>
-
 </html>
