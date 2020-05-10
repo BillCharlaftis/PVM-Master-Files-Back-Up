@@ -1,6 +1,6 @@
 $(document).ready(function () {
     const ipc = require('electron').ipcRenderer;
-    
+
     let transferOptiond = {
         srcDir: null,
         createMasterCsv: true,
@@ -15,6 +15,9 @@ $(document).ready(function () {
     });
 
     $("#execute").on('click', () => {
+
+        ipc.send('init-Transfer', transferOptiond.srcDir, transferOptiond.destDir);
+
         window.location = "fileTransfer.html?srcDir="
             + transferOptiond.srcDir.split("\\").pop() + "&destDir="
             + transferOptiond.destDir.split("\\").pop() + "&MasterCsv="

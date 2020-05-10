@@ -54,17 +54,11 @@ if ($("#chLine")) {
         $("#currentSpeed").html(updateTransferData.speed + "mb/s");
 
     }
-
-    function removeData() {
-        chart.data.labels.pop();
-        chart.data.datasets[0].data.pop();
-        chart.update();
-    }
     init();
 }
 
 function init() {
-    const ipc = require('electron').ipcRenderer;
+    const ipcSender = require('electron').ipcRenderer;
 
     let searchParams = new URLSearchParams(window.location.search);
     $("#srcFolder").html(searchParams.get('srcDir'));
@@ -74,11 +68,13 @@ function init() {
 
     $("#PauseTransfer, #CancelTransfer").on('click', function (event) {
         console.log(event.target.id+"   clicked!!!");
-        ipc.send('transfer-interapt', causedBy = event.target.id)
+        ipcSender.send('transfer-interapt', causedBy = event.target.id)
     });
 
-    ipc.on('update-data', function (event, updateTransferData) {
+    ipcSender.on('update-data', function (event, updateTransferData) {
         addData(updateTransferData);
     });
+
+    ipcSender.send('start-Transfer');
 
 }

@@ -5,7 +5,7 @@ const transferer = require("./src/Controller/transferer.js");
 function initApp(){
   let win = createWindow();
   folderChooser(win);
-  transferer(app);
+  transferer(win);
 }
 
 function createWindow() {
