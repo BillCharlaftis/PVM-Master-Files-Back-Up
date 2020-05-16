@@ -39,21 +39,34 @@ if ($("#chLine")) {
         }
     });
 
-    //addData(10, 100, "example.mp4", "0hr 2min 24sec","10 (128MB)")
-    function addData(updateTransferData) {
-        chart.data.labels.push(updateTransferData.perc);
-        chart.data.datasets[0].data.push(updateTransferData.speed);
+    let currentItemNum = 0;
+    function addData(updateTransferData, totalItems) {
+
+        var i;
+        for (i = 0; i < updateTransferData.length; i++) {
+            chart.data.labels.push(updateTransferData[i].perc);
+            chart.data.datasets[0].data.push(updateTransferData[i].speed);
+
+        }
+        chart.data.datasets[0].data.sort((a, b) => a.order - b.order);
         chart.update();
 
-        $("#TransferPerc").html(updateTransferData.perc + "%");
-        $(".transferPercentage").width(updateTransferData.perc + "%");
-        $("#currentSpeed").html(updateTransferData.speed + "mb/s");
-        $("#transfering-file").html(updateTransferData.transfFile);
-        $("#estimated-time").html(updateTransferData.remainTime);
-        $("#items-Remaining").html(updateTransferData.remainItems);
-        $("#currentSpeed").html(updateTransferData.speed + "mb/s");
+        currentItemNum += i;
+        i -= 1;
+
+        var perc = ((currentItemNum * 100) / totalItems).toFixed(2)
+
+        $("#NumOfFiles").html(totalItems);
+        $("#TransferPerc").html(perc + "%");
+        $(".transferPercentage").width(perc + "%");
+        $("#currentSpeed").html(updateTransferData[i].speed + "mb/s");
+        $("#transfering-file").html(updateTransferData[i].transfFile);
+        $("#estimated-time").html(updateTransferData[i].remainTime);
+        $("#items-Remaining").html((totalItems-currentItemNum)+" "+updateTransferData[i].remainSize);
+        $("#currentSpeed").html(updateTransferData[i].speed + "mb/s");
 
     }
+
     init();
 }
 
@@ -67,12 +80,12 @@ function init() {
     MasterCsv = searchParams.get('MasterCsv');
 
     $("#PauseTransfer, #CancelTransfer").on('click', function (event) {
-        console.log(event.target.id+"   clicked!!!");
+        console.log(event.target.id + "   clicked!!!");
         ipcSender.send('transfer-interapt', causedBy = event.target.id)
     });
 
-    ipcSender.on('update-data', function (event, updateTransferData) {
-        addData(updateTransferData);
+    ipcSender.on('update-data', function (event, updateTransferData, totalItems) {
+        addData(updateTransferData, totalItems);
     });
 
     ipcSender.send('start-Transfer');
