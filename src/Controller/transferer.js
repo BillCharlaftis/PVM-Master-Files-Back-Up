@@ -39,7 +39,6 @@ module.exports = (win) => {
     }
 
     function transfer() {
-        let i = 0;
         let transferedSize = 0;
         let totalStartTime = process.hrtime();
         let avgSpeed = 0;
@@ -47,7 +46,7 @@ module.exports = (win) => {
         let upadteData = [];
 
         srcList.forEach(file => {
-            i++;
+            let roundStartTime = process.hrtime();
 
             while (pauseTransfer) { console.log("Paused!") }
 
@@ -55,7 +54,7 @@ module.exports = (win) => {
                 alert("Transfer should be canceled!!!")
             }
 
-            fs.copyFile(srcDir + "\\" + file.split("\\").pop(), destDir + "\\" + file.split("\\").pop(), () => {
+            fs.copyFile(srcDir + "\\" + file.split("\\").pop(), destDir + "\\" + file.split("\\").pop(), (roundTime = roundStartTime) => {
 
                 if (!fs.readFileSync(srcDir + "\\" + file.split("\\").pop()).equals(fs.readFileSync(destDir + "\\" + file.split("\\").pop())))
                     alert("File " + srcDir + "\\" + file.split("\\").pop() + " is not identical to " + destDir + "\\" + file.split("\\").pop());
@@ -67,13 +66,13 @@ module.exports = (win) => {
                 remaingTransferDiskSize = totalSrcDiskSize - transferedSize;
 
                 upadteData.push({
-                    speed: avgSpeed.toFixed(2),
+                    speed: (currentFileSize / parseHrtimeToSeconds(roundTime)).toFixed(2),
                     transfFile: file,
                     remainTime: remainingTimeExpectetion(remaingTransferDiskSize, avgSpeed),
                     remainSize: " (" + remaingTransferDiskSize.toFixed(2) + " MB)"
                 });
 
-                if (upadteData.length == 5 || i == 1 || i == srcList.length) {
+                if (upadteData.length == 1 || i == 1 || i == srcList.length) {
                     win.webContents.send('update-data', upadteData, srcList.length);
 
                     upadteData = [];
@@ -83,7 +82,11 @@ module.exports = (win) => {
     }
 
     function parseHrtimeToSeconds(hrtime) {
-        var seconds = (hrtime[0] + (hrtime[1] / 1e9)).toFixed(3);
+        console.log("\n________________");
+        console.log(hrtime);
+        let seconds = (hrtime[0] + (hrtime[1] / 1e9)).toFixed(3);
+        console.log(seconds);
+        console.log("________________\n");
         return seconds;
     }
 
