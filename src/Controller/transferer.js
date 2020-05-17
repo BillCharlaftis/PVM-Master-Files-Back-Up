@@ -40,13 +40,14 @@ module.exports = (win) => {
 
     function transfer() {
         let transferedSize = 0;
-        let totalStartTime = process.hrtime();
+        let totalStartTime = Date.now();
         let avgSpeed = 0;
         let remaingTransferDiskSize = 0;
         let upadteData = [];
 
         srcList.forEach(file => {
-            let roundStartTime = process.hrtime();
+            let roundStartTime = Date.now();
+            // console.log(roundStartTime);
 
             while (pauseTransfer) { console.log("Paused!") }
 
@@ -54,7 +55,9 @@ module.exports = (win) => {
                 alert("Transfer should be canceled!!!")
             }
 
-            fs.copyFile(srcDir + "\\" + file.split("\\").pop(), destDir + "\\" + file.split("\\").pop(), (roundTime = roundStartTime) => {
+            fs.copyFile(srcDir + "\\" + file.split("\\").pop(), destDir + "\\" + file.split("\\").pop(), (roundTime = this.roundStartTime) => {
+
+                console.log("Initial: "+totalStartTime+", outer round: "+roundStartTime+", inner round: "+roundTime+", now: "+ Date.now());
 
                 if (!fs.readFileSync(srcDir + "\\" + file.split("\\").pop()).equals(fs.readFileSync(destDir + "\\" + file.split("\\").pop())))
                     alert("File " + srcDir + "\\" + file.split("\\").pop() + " is not identical to " + destDir + "\\" + file.split("\\").pop());
@@ -62,11 +65,11 @@ module.exports = (win) => {
                 let currentFileSize = getFileSizeInBytes(srcDir + "\\" + file.split("\\").pop()) / 1000000.0;
 
                 transferedSize += currentFileSize;
-                avgSpeed = transferedSize / parseHrtimeToSeconds(process.hrtime(totalStartTime));
+                avgSpeed = (transferedSize / ((Date.now() - totalStartTime) / 1000)).toFixed(2);
                 remaingTransferDiskSize = totalSrcDiskSize - transferedSize;
 
                 upadteData.push({
-                    speed: (currentFileSize / parseHrtimeToSeconds(roundTime)).toFixed(2),
+                    speed: (currentFileSize / ((Date.now() - roundStartTime) / 1000)).toFixed(2),
                     transfFile: file,
                     remainTime: remainingTimeExpectetion(remaingTransferDiskSize, avgSpeed),
                     remainSize: " (" + remaingTransferDiskSize.toFixed(2) + " MB)"
@@ -79,15 +82,6 @@ module.exports = (win) => {
                 }
             });
         });
-    }
-
-    function parseHrtimeToSeconds(hrtime) {
-        console.log("\n________________");
-        console.log(hrtime);
-        let seconds = (hrtime[0] + (hrtime[1] / 1e9)).toFixed(3);
-        console.log(seconds);
-        console.log("________________\n");
-        return seconds;
     }
 
     function remainingTimeExpectetion(remaingTransferDiskSize, avgSpeed) {
