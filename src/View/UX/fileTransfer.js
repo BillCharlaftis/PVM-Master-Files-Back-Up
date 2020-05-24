@@ -1,5 +1,6 @@
 let MasterCsv = false;
 let keepDuplicateCsv = false;
+let srcFolder = "";
 
 let chartData = {
     labels: ["0%"],
@@ -40,31 +41,27 @@ if ($("#chLine")) {
     });
 
     let currentItemNum = 0;
-    function addData(updateTransferData, totalItems) {
+    function addData(updateTransferData, stats) {
 
         var i;
         for (i = 0; i < updateTransferData.length; i++) {
             chart.data.labels.push(updateTransferData[i].perc);
             chart.data.datasets[0].data.push(updateTransferData[i].speed);
-
         }
-        chart.data.datasets[0].data.sort((a, b) => a.order - b.order);
         chart.update();
 
         currentItemNum += i;
-        i -= 1;
 
-        var perc = ((currentItemNum * 100) / totalItems).toFixed(2)
+        $("#TransferPerc").html(stats.perc + "%");
+        $(".transferPercentage").width(stats.perc + "%");
+        $("#NumOfFiles").html(stats.totalItems);
+        $("#currentSpeed").html(updateTransferData[updateTransferData.length - 1].speed + "mb/s");
+        $("#transfering-file").html(stats.transfFile);
+        $("#estimated-time").html(stats.remainTime);
+        $("#items-Remaining").html(stats.remainSize);
 
-        $("#NumOfFiles").html(totalItems);
-        $("#TransferPerc").html(perc + "%");
-        $(".transferPercentage").width(perc + "%");
-        $("#currentSpeed").html(updateTransferData[i].speed + "mb/s");
-        $("#transfering-file").html(updateTransferData[i].transfFile);
-        $("#estimated-time").html(updateTransferData[i].remainTime);
-        $("#items-Remaining").html((totalItems-currentItemNum)+" "+updateTransferData[i].remainSize);
-        $("#currentSpeed").html(updateTransferData[i].speed + "mb/s");
-
+        if (stats.remainSize === "0 (0.00 MB)")
+            window.location = "index.html?srcDir=" + srcFolder;
     }
 
     init();
@@ -74,18 +71,14 @@ function init() {
     const ipcSender = require('electron').ipcRenderer;
 
     let searchParams = new URLSearchParams(window.location.search);
-    $("#srcFolder").html(searchParams.get('srcDir'));
+    srcFolder = searchParams.get('srcDir');
+    $("#srcFolder").html(srcFolder.split("\\").pop());
     $("#destFolder").html(searchParams.get('destDir'));
     keepDuplicateCsv = searchParams.get('keepDuplicateCsv');
     MasterCsv = searchParams.get('MasterCsv');
 
-    $("#PauseTransfer, #CancelTransfer").on('click', function (event) {
-        console.log(event.target.id + "   clicked!!!");
-        ipcSender.send('transfer-interapt', causedBy = event.target.id)
-    });
-
-    ipcSender.on('update-data', function (event, updateTransferData, totalItems) {
-        addData(updateTransferData, totalItems);
+    ipcSender.on('update-data', function (event, updateTransferData, stats) {
+        addData(updateTransferData, stats);
     });
 
     ipcSender.send('start-Transfer');

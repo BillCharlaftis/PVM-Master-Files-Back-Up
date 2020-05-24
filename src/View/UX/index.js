@@ -1,6 +1,10 @@
 $(document).ready(function () {
     const ipc = require('electron').ipcRenderer;
 
+    let searchParams = new URLSearchParams(window.location.search);
+    console.log(window.location.search);
+    $("#srcDir-Label").html(searchParams.get('srcDir') == undefined ? "Sorce Folder" : searchParams.get('srcDir'));
+
     let transferOptiond = {
         srcDir: null,
         createMasterCsv: true,
@@ -19,7 +23,7 @@ $(document).ready(function () {
         ipc.send('init-Transfer', transferOptiond.srcDir, transferOptiond.destDir);
 
         window.location = "fileTransfer.html?srcDir="
-            + transferOptiond.srcDir.split("\\").pop() + "&destDir="
+            + transferOptiond.srcDir + "&destDir="
             + transferOptiond.destDir.split("\\").pop() + "&MasterCsv="
             + transferOptiond.createMasterCsv + "&keepDuplicateCsv="
             + transferOptiond.keepDuplicateCsv;

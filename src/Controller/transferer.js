@@ -2,20 +2,24 @@ module.exports = (win) => {
     const ipc = require('electron').ipcMain;
     const fs = require('fs');
 
-    let pauseTransfer = false;
-    let cancelTransfer = false;
     let destDir = "";
     let srcDir = "";
     let srcList = [];
     let totalSrcDiskSize = 0;
+    let Cancel = false;
 
     function init(src, dest) {
-        pauseTransfer = false;
-        cancelTransfer = false;
         destDir = dest;
         srcDir = src;
+        Cancel = false;
+        transferedSize = 0;
+        totalStartTime = Date.now();
+        avgSpeed = 0;
+        remaingTransferDiskSize = 0;
         [srcList, totalSrcDiskSize] = getDirContentsAndSize(src);
-
+        fullSize = srcList.length;
+        howManyAreDone = 0;
+        fileCopyStartData = [];
     }
 
     function getDirContentsAndSize(dir) {
@@ -38,50 +42,59 @@ module.exports = (win) => {
         return fileSizeInBytes
     }
 
+    let transferedSize = 0;
+    let totalStartTime =0;
+    let avgSpeed = 0;
+    let remaingTransferDiskSize = 0;
+    let fullSize = 0;
+    let howManyAreDone = 0;
+    let fileCopyStartData = [];
+
     function transfer() {
-        let transferedSize = 0;
-        let totalStartTime = Date.now();
-        let avgSpeed = 0;
-        let remaingTransferDiskSize = 0;
+        let upperLimit = srcList.length > 5 ? 5 : srcList.length;
         let upadteData = [];
 
-        srcList.forEach(file => {
-            let roundStartTime = Date.now();
-            // console.log(roundStartTime);
+        for (let i = 0; i < upperLimit; i++) {
+            file = srcList[0];
+            fileCopyStartData.push({ srcFile: file, startAt: Date.now() });
 
-            while (pauseTransfer) { console.log("Paused!") }
-
-            if (cancelTransfer) {
-                alert("Transfer should be canceled!!!")
-            }
-
-            fs.copyFile(srcDir + "\\" + file.split("\\").pop(), destDir + "\\" + file.split("\\").pop(), (roundTime = this.roundStartTime) => {
-
-                console.log("Initial: "+totalStartTime+", outer round: "+roundStartTime+", inner round: "+roundTime+", now: "+ Date.now());
-
-                if (!fs.readFileSync(srcDir + "\\" + file.split("\\").pop()).equals(fs.readFileSync(destDir + "\\" + file.split("\\").pop())))
-                    alert("File " + srcDir + "\\" + file.split("\\").pop() + " is not identical to " + destDir + "\\" + file.split("\\").pop());
-
-                let currentFileSize = getFileSizeInBytes(srcDir + "\\" + file.split("\\").pop()) / 1000000.0;
+            fs.copyFile(srcDir + "\\" + file.split("\\").pop(), destDir + "\\" + file.split("\\").pop(), () => {
+                let args = fileCopyStartData[howManyAreDone];
+                howManyAreDone += 1;
+                let currentFileSize = getFileSizeInBytes(srcDir + "\\" + args.srcFile.split("\\").pop()) / 1000000.0;
 
                 transferedSize += currentFileSize;
                 avgSpeed = (transferedSize / ((Date.now() - totalStartTime) / 1000)).toFixed(2);
                 remaingTransferDiskSize = totalSrcDiskSize - transferedSize;
 
                 upadteData.push({
-                    speed: (currentFileSize / ((Date.now() - roundStartTime) / 1000)).toFixed(2),
-                    transfFile: file,
-                    remainTime: remainingTimeExpectetion(remaingTransferDiskSize, avgSpeed),
-                    remainSize: " (" + remaingTransferDiskSize.toFixed(2) + " MB)"
+                    speed: (currentFileSize / ((Date.now() - args.startAt) / 1000)).toFixed(2)
                 });
 
-                if (upadteData.length == 1 || i == 1 || i == srcList.length) {
-                    win.webContents.send('update-data', upadteData, srcList.length);
+                if (upadteData.length == 5 || i == 0) {
 
-                    upadteData = [];
+                    let currentLength = howManyAreDone;
+
+                    let generalStats = {
+                        totalItems: fullSize,
+                        perc: ((currentLength * 100) / fullSize).toFixed(2),
+                        transfFile: args.srcFile,
+                        remainTime: remainingTimeExpectetion(remaingTransferDiskSize, (currentFileSize / ((Date.now() - args.startAt) / 1000)).toFixed(2)),
+                        remainSize: (fullSize - currentLength) + " (" + remaingTransferDiskSize.toFixed(2) + " MB)"
+                    };
+
+                    console.log(upadteData);
+                    console.log(generalStats);
+                    console.log("____________________");
+
+                    win.webContents.send('update-data', upadteData, generalStats);
+                    if (fullSize >= currentLength) {
+                        transfer();
+                    }
                 }
             });
-        });
+            srcList.splice(0, 1);
+        }
     }
 
     function remainingTimeExpectetion(remaingTransferDiskSize, avgSpeed) {
@@ -98,13 +111,7 @@ module.exports = (win) => {
             .join(":");
     }
 
-    ipc.on('transfer-interapt', function (event, causedBy) {
-        if (causedBy === "PauseTransfer")
-            pauseTransfer = !pauseTransfer;
-        else
-            cancelTransfer = true;
-    });
-
     ipc.on('init-Transfer', (event, src, dest) => init(src, dest));
     ipc.on('start-Transfer', (event) => transfer());
+
 }
