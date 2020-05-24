@@ -43,7 +43,7 @@ module.exports = (win) => {
     }
 
     let transferedSize = 0;
-    let totalStartTime =0;
+    let totalStartTime = 0;
     let avgSpeed = 0;
     let remaingTransferDiskSize = 0;
     let fullSize = 0;
@@ -57,6 +57,14 @@ module.exports = (win) => {
         for (let i = 0; i < upperLimit; i++) {
             file = srcList[0];
             fileCopyStartData.push({ srcFile: file, startAt: Date.now() });
+
+            if (fs.existsSync(destDir + "\\" + file.split("\\").pop())) {
+                if (fs.readFileSync((srcDir + "\\" + file.split("\\").pop()).equals((fs.readFileSync((destDir + "\\" + file.split("\\").pop()))))))
+                    continue;
+                else
+                    throw new Error('One');
+                     
+            }
 
             fs.copyFile(srcDir + "\\" + file.split("\\").pop(), destDir + "\\" + file.split("\\").pop(), () => {
                 let args = fileCopyStartData[howManyAreDone];
